@@ -25,7 +25,7 @@ const Content = ({course})=>{
 const Total = ({course})=>{
     
     const sum = course.parts.reduce((accumulator,info)=>{
-        return accumulator + info.exercise 
+        return accumulator + info.exercises 
     },0)
     return( 
     <p>Number of exercises {sum}</p> 

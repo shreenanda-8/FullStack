@@ -6,15 +6,15 @@ const Part = ({name,exercise})=>{
 }
 const Content = ({course})=>{
    const names = course.parts.map((info)=>{
-       return info.part
+       return info.name
    })
    const exercise = course.parts.map((info)=>{
-       return info.exercise
+       return info.exercises
    })
    const [name1, name2, name3] = names
    const [ex1,ex2,ex3] = exercise
    return(
-       <>
+        <>
         <Part name= {name1} exercise = {ex1}/>
         <Part name = {name2} exercise = {ex2}/>
         <Part name = {name3} exercise = {ex3}/>
@@ -37,24 +37,25 @@ const Header = ({name})=>{
     )
 }
 const App = () => {
+   
     const course = {
         name: 'Half Stack application development',
-        parts:
-         [
+        parts: [
           {
-            part: 'Fundamentals of React',
-            exercise: 10
+            name: 'Fundamentals of React',
+            exercises: 10
           },
           {
-            part: 'Using props to pass data',
-            exercise: 7
+            name: 'Using props to pass data',
+            exercises: 7
           },
           {
-            part: 'State of a component',
-            exercise: 14
+            name: 'State of a component',
+            exercises: 14
           }
         ]
       }
+    
   
     return (
       <div>

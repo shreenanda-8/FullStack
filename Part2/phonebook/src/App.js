@@ -1,18 +1,23 @@
 import React, { useEffect, useState } from 'react'
-import axios from 'axios'
+
+import phoneServise from './servises/phone.js'
 const Persons = (props) => {
+   
     const listOfPeople = props.list
     const listOfDisplayData = props.display
+    //  const uid = ()=>{
+    //         return Date.now().toString(36) + Math.random().toString(36).substr(2);
+    //     }
     const OverallInfo = listOfPeople.map((info, index) => {
-        return { name: info.name, number: info.number, visible: listOfDisplayData[index] }
+        return { name: info.name, number: info.number, visible: listOfDisplayData[index], id: info.id}
     })
     if (OverallInfo.length) {
         const curate = OverallInfo.filter((info) => {
             return info.visible === true
         })
         const list = curate.map((info) => {
-
-            return <p key={info.name}>{info.name}  {info.number}</p>
+            
+            return <p key={info.name}>{info.name}  {info.number} <button onClick={()=>props.handleDeleteSender(info)}>Delete</button></p>
         })
         return (
             <div>
@@ -51,23 +56,29 @@ const App = () => {
     const [newNumber, setNewNumber] = useState('')
     const [newName, setNewName] = useState('')
     const [searchField, setSearch] = useState('')
-    useEffect(async()=>{
-       
-       try{
-        const Info = await axios.get('http://localhost:3001/persons')
-        console.log(Info.data)
+    useEffect(()=>{
+       function DoTheJob()
+       {
         const disp = visible
-         for(var i = 0; i < Info.data.length; i++)
-         {
-             disp.push(true)
-         }
-         setVisible(disp)
-        setPersons(Info.data)
+        phoneServise.getAll()
+        .then((Info)=>{
+         
+        
+          for(var i = 0; i < Info.data.length; i++)
+          {
+              disp.push(true)
+          }
+          setVisible(disp)
+          setPersons(Info.data)
+        })
+        .catch((err)=>{
+            console.log({error: err.message})
+        })
+        
        }
-       catch(err){
-           console.log({error: err.message})
-       }
-    }, [])
+     DoTheJob()
+        
+    },[visible])
     const handleName = (event) => {
 
         //I got an error about uncontrolled input and controlled input unitil I updated the state
@@ -80,7 +91,7 @@ const App = () => {
         setNewNumber(event.target.value)
     }
     const handleSubmit = (event) => {
-
+        
         event.preventDefault()
         const listPeople = [...persons]
         const listVisible = [...visible]
@@ -88,14 +99,38 @@ const App = () => {
         const listNames = listPeople.map((info) => info.name)
 
         if (listNames.includes(newName)) {
-            alert(`${newName} is already added to the PhoneBook`)
+            if(window.confirm(`${newName} is already added to phonebook, replace old number with new one?`))
+            {
+                const list = persons.map((info)=>{
+                    if(info.name === newName)
+                    {
+                        info.number = newNumber
+                    }
+                    return info
+                })
+                const info = persons.filter((info)=>info.name === newName)
+               
+                info[0].number = newNumber
+                phoneServise.update(info[0])
+                .then((response)=>{
+                   setPersons(list)
+                })
+            }
         }
         else {
-            const data = { name: newName, number: newNumber }
-            listVisible.push(true)
-            listPeople.push(data)
-            setPersons(listPeople)
-            setVisible(listVisible)
+            const data = { name: newName, number: newNumber}
+            phoneServise.create(data)
+            .then((response)=>{
+                listVisible.push(true)
+                
+                listPeople.push(response.data)
+                setPersons(listPeople)
+                setVisible(listVisible)
+            })
+            .catch((err)=>{
+                console.log({error: err.message})
+            })
+           
 
         }
 
@@ -127,6 +162,37 @@ const App = () => {
 
         setVisible(listToDisplay)
     }
+    const handleDelete = (Info)=>{
+        
+        const list = persons
+           const visibility = visible
+          
+           const index = list.map((info)=>info.id===Info.id)
+           if(window.confirm(`Delete ${Info.name} ?`))
+           {
+            phoneServise.remove(Info.id)
+            .then((response)=>{
+               
+                
+                for(let i = 0; i < index.length; i++)
+                {
+                    if(index[i])
+                    {
+                       
+                        const updated = visibility.filter((info,ind)=>ind !== i)
+                        setVisible(updated)
+                        break
+                    }
+                }
+                setPersons(list.filter((info)=>info.id !== Info.id))
+            })
+            .catch((err)=>{
+                console.log({error: err.message})
+            })
+           }
+        
+        
+    }
     return (
         <div>
             <h2>Phonebook</h2>
@@ -142,7 +208,7 @@ const App = () => {
                 handleSubmitSender={(event) => handleSubmit(event)}
             />
             <h2>Numbers</h2>
-            <Persons list={persons} display={visible} />
+            <Persons list={persons} display={visible} handleDeleteSender = {(event)=>handleDelete(event)}/>
 
         </div>
     )

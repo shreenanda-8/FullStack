@@ -1,8 +1,12 @@
 import React, { useState } from 'react'
 const Persons = (props) => {
     const listOfPeople = props.list
-    if (listOfPeople.length) {
-        const curate = listOfPeople.filter((info) => {
+    const listOfDisplayData = props.display
+    const OverallInfo = listOfPeople.map((info, index)=>{
+          return {name: info.name, number: info.number, visible: listOfDisplayData[index]}
+    })
+    if (OverallInfo.length) {
+        const curate = OverallInfo.filter((info) => {
             return info.visible === true
         })
         const list = curate.map((info) => {
@@ -27,7 +31,7 @@ const Filter = ({ searchField, handleSearchField }) => {
         </div>
     )
 }
-const PersonForm = ({newName,newNumber, event, handleNameSender, handleNumberSender, handleSubmitSender}) => {
+const PersonForm = ({newName,newNumber, handleNameSender, handleNumberSender, handleSubmitSender}) => {
    return(
     <form >
     <div>
@@ -42,11 +46,12 @@ const PersonForm = ({newName,newNumber, event, handleNameSender, handleNumberSen
 }
 const App = () => {
     const [persons, setPersons] = useState([
-        { name: 'Arto Hellas', number: '040-123456', visible: true },
-        { name: 'Ada Lovelace', number: '39-44-5323523', visible: true },
-        { name: 'Dan Abramov', number: '12-43-234345', visible: true },
-        { name: 'Mary Poppendieck', number: '39-23-6423122', visible: true }
+        { name: 'Arto Hellas', number: '040-123456'},
+        { name: 'Ada Lovelace', number: '39-44-5323523' },
+        { name: 'Dan Abramov', number: '12-43-234345'},
+        { name: 'Mary Poppendieck', number: '39-23-6423122'}
     ])
+    const [visible, setVisible] = useState([true, true, true, true])
     const [newNumber, setNewNumber] = useState('')
     const [newName, setNewName] = useState('')
     const [searchField, setSearch] = useState('')
@@ -64,7 +69,7 @@ const App = () => {
 
         event.preventDefault()
         const listPeople = [...persons]
-
+        const listVisible = [...visible]
         //Directly checking includes of an array of objects is not possible
         const listNames = listPeople.map((info) => info.name)
 
@@ -72,9 +77,12 @@ const App = () => {
             alert(`${newName} is already added to the PhoneBook`)
         }
         else {
-            const data = { name: newName, number: newNumber, visible: true }
+            const data = { name: newName, number: newNumber }
+            listVisible.push(true)
             listPeople.push(data)
             setPersons(listPeople)
+            setVisible(listVisible)
+            
         }
 
     }
@@ -82,24 +90,28 @@ const App = () => {
         event.preventDefault()
 
         const listPeople = [...persons]
-
+          
         setSearch(event.target.value)
-        const listToDisplay = listPeople.map((info) => {
+        const listVisible = [...visible]
+       
+        const listToDisplay = listPeople.map((info, index) => {
             var name = info.name.toLowerCase()
             //Setting event.target.value works but searchField is not working it's always 1 step behind the time
             //That's why better to use event.target.value
            
             if (!name.includes(event.target.value.toLowerCase())) {
-                info.visible = false
-
+                
+               listVisible[index] = false
+                 
             }
             else {
-                info.visible = true
-            }
-            return info
+                
+                listVisible[index] = true
+             }
+            return listVisible[index]
         })
-
-        setPersons(listToDisplay)
+   
+        setVisible(listToDisplay)
     }
     return (
         <div>
@@ -116,7 +128,7 @@ const App = () => {
             handleSubmitSender = {(event)=>handleSubmit(event)}
             />
             <h2>Numbers</h2>
-            <Persons list={persons} />
+            <Persons list={persons} display = {visible}/>
 
         </div>
     )

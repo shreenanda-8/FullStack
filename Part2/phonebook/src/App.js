@@ -1,4 +1,5 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
+import axios from 'axios'
 const Persons = (props) => {
     const listOfPeople = props.list
     const listOfDisplayData = props.display
@@ -45,16 +46,28 @@ const PersonForm = ({ newName, newNumber, handleNameSender, handleNumberSender, 
     )
 }
 const App = () => {
-    const [persons, setPersons] = useState([
-        { name: 'Arto Hellas', number: '040-123456' },
-        { name: 'Ada Lovelace', number: '39-44-5323523' },
-        { name: 'Dan Abramov', number: '12-43-234345' },
-        { name: 'Mary Poppendieck', number: '39-23-6423122' }
-    ])
-    const [visible, setVisible] = useState([true, true, true, true])
+    const [persons, setPersons] = useState([])
+    const [visible, setVisible] = useState([])
     const [newNumber, setNewNumber] = useState('')
     const [newName, setNewName] = useState('')
     const [searchField, setSearch] = useState('')
+    useEffect(async()=>{
+       
+       try{
+        const Info = await axios.get('http://localhost:3001/persons')
+        console.log(Info.data)
+        const disp = visible
+         for(var i = 0; i < Info.data.length; i++)
+         {
+             disp.push(true)
+         }
+         setVisible(disp)
+        setPersons(Info.data)
+       }
+       catch(err){
+           console.log({error: err.message})
+       }
+    }, [])
     const handleName = (event) => {
 
         //I got an error about uncontrolled input and controlled input unitil I updated the state

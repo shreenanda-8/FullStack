@@ -2,8 +2,8 @@ import React, { useState } from 'react'
 const Persons = (props) => {
     const listOfPeople = props.list
     const listOfDisplayData = props.display
-    const OverallInfo = listOfPeople.map((info, index)=>{
-          return {name: info.name, number: info.number, visible: listOfDisplayData[index]}
+    const OverallInfo = listOfPeople.map((info, index) => {
+        return { name: info.name, number: info.number, visible: listOfDisplayData[index] }
     })
     if (OverallInfo.length) {
         const curate = OverallInfo.filter((info) => {
@@ -31,25 +31,25 @@ const Filter = ({ searchField, handleSearchField }) => {
         </div>
     )
 }
-const PersonForm = ({newName,newNumber, handleNameSender, handleNumberSender, handleSubmitSender}) => {
-   return(
-    <form >
-    <div>
-        name: <input value={newName} onChange={(event) => handleNameSender(event)} />
-    </div>
-    <div>number: <input value={newNumber} onChange={(event) => handleNumberSender(event)} /></div>
-    <div>
-        <button type="submit" onClick={(event) => handleSubmitSender(event)}>add</button>
-    </div>
-   </form>
-   )
+const PersonForm = ({ newName, newNumber, handleNameSender, handleNumberSender, handleSubmitSender }) => {
+    return (
+        <form >
+            <div>
+                name: <input value={newName} onChange={(event) => handleNameSender(event)} />
+            </div>
+            <div>number: <input value={newNumber} onChange={(event) => handleNumberSender(event)} /></div>
+            <div>
+                <button type="submit" onClick={(event) => handleSubmitSender(event)}>add</button>
+            </div>
+        </form>
+    )
 }
 const App = () => {
     const [persons, setPersons] = useState([
-        { name: 'Arto Hellas', number: '040-123456'},
+        { name: 'Arto Hellas', number: '040-123456' },
         { name: 'Ada Lovelace', number: '39-44-5323523' },
-        { name: 'Dan Abramov', number: '12-43-234345'},
-        { name: 'Mary Poppendieck', number: '39-23-6423122'}
+        { name: 'Dan Abramov', number: '12-43-234345' },
+        { name: 'Mary Poppendieck', number: '39-23-6423122' }
     ])
     const [visible, setVisible] = useState([true, true, true, true])
     const [newNumber, setNewNumber] = useState('')
@@ -61,6 +61,7 @@ const App = () => {
         setNewName(event.target.value)
 
     }
+
     const handleNumber = (event) => {
         event.preventDefault()
         setNewNumber(event.target.value)
@@ -82,7 +83,7 @@ const App = () => {
             listPeople.push(data)
             setPersons(listPeople)
             setVisible(listVisible)
-            
+
         }
 
     }
@@ -90,27 +91,27 @@ const App = () => {
         event.preventDefault()
 
         const listPeople = [...persons]
-          
+
         setSearch(event.target.value)
         const listVisible = [...visible]
-       
+
         const listToDisplay = listPeople.map((info, index) => {
             var name = info.name.toLowerCase()
             //Setting event.target.value works but searchField is not working it's always 1 step behind the time
             //That's why better to use event.target.value
-           
+
             if (!name.includes(event.target.value.toLowerCase())) {
-                
-               listVisible[index] = false
-                 
+
+                listVisible[index] = false
+
             }
             else {
-                
+
                 listVisible[index] = true
-             }
+            }
             return listVisible[index]
         })
-   
+
         setVisible(listToDisplay)
     }
     return (
@@ -119,16 +120,16 @@ const App = () => {
             <Filter searchField={searchField} handleSearchField={(event) => handleSearchChange(event)} />
 
             <h2>Add a new </h2>
-            
-            <PersonForm  
-            newNmae = {newName}
-            newNumber = {newNumber} 
-            handleNameSender = {(event)=>handleName(event)}
-            handleNumberSender = {(event)=>handleNumber(event)}
-            handleSubmitSender = {(event)=>handleSubmit(event)}
+
+            <PersonForm
+                newNmae={newName}
+                newNumber={newNumber}
+                handleNameSender={(event) => handleName(event)}
+                handleNumberSender={(event) => handleNumber(event)}
+                handleSubmitSender={(event) => handleSubmit(event)}
             />
             <h2>Numbers</h2>
-            <Persons list={persons} display = {visible}/>
+            <Persons list={persons} display={visible} />
 
         </div>
     )

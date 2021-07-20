@@ -50,9 +50,36 @@ const PersonForm = ({ newName, newNumber, handleNameSender, handleNumberSender, 
         </form>
     )
 }
+const Notification = ({ text, color }) => {
+    const notif = {
+        color: `${color}`,
+
+        background: "lightgrey",
+        fontSize: "20px",
+        borderStyle: "solid",
+        borderRadius: "5px",
+        padding: "10px",
+        marginBottom: "10px"
+    }
+   if(text)
+   {
+    return (
+        <div style={notif}>
+            <h1>{text}</h1>
+        </div>
+    )
+
+   }
+   else{
+       return(<></>)
+   }
+
+}
 const App = () => {
     const [persons, setPersons] = useState([])
     const [visible, setVisible] = useState([])
+    const [error, setError] = useState(null)
+    const [color, setColor] = useState('')
     const [newNumber, setNewNumber] = useState('')
     const [newName, setNewName] = useState('')
     const [searchField, setSearch] = useState('')
@@ -122,6 +149,11 @@ const App = () => {
                     listPeople.push(response.data)
                     setPersons(listPeople)
                     setVisible(listVisible)
+                    setError(`Added ${newName}`)
+                    setColor("green")
+                    setTimeout(() => {
+                        setError(null)
+                    }, 3000)
                 })
                 .catch((err) => {
                     console.log({ error: err.message })
@@ -181,14 +213,21 @@ const App = () => {
                 })
                 .catch((err) => {
                     console.log({ error: err.message })
+                    setError(`Information of ${Info.name} is already removed from the server. Refresh to see the changes`)
+                    setColor('red')
+                    setTimeout(() => {
+                        setError(null)
+                    }, 3000)
                 })
         }
 
 
     }
+
     return (
         <div>
             <h2>Phonebook</h2>
+            <Notification text={error} color={color} />
             <Filter searchField={searchField} handleSearchField={(event) => handleSearchChange(event)} />
 
             <h2>Add a new </h2>

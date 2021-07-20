@@ -38,6 +38,22 @@ app.get('/info', (request, response)=>{
        `
     )
 })
+app.get('/api/persons/:id',(request, response)=>{
+   
+    const ID = Number(request.params.id)
+    const info = data.filter((info)=>info.id === ID)
+    console.log(info)
+    if(info.length)
+    {
+
+        response.json(info)
+    }
+    else
+    {
+        response.status(404).send("Reqeusting user not found")
+    }
+    
+})
 
 app.listen(3001,(request, response)=>{
     console.log("Server started running")

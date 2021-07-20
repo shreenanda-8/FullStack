@@ -67,12 +67,32 @@ app.delete('/api/persons/:id', (request, response)=>{
 })
 app.post('/api/persons', (request, response)=>{
     const info = {
-        name: request.body.name,
-        number: request.body.number,
+        name: `${request.body.name}`,
+        number:`${request.body.number}`,
         id: getRandom()
     }
-    data.push(info)
-    response.status(202).json(data)
+    if(info.name.length && info.number.length)
+    {
+        const value = data.filter((item)=>{
+            console.log(item)
+            return item.name == info.name
+        })
+        console.log(value)
+        console.log(info.name)
+       if(value.length)
+       {
+            response.status(406).json({error: "Name must be unique"})
+        
+       }
+       else{
+        data.push(info)
+        response.status(202).json(data)
+       }
+    }
+    else
+    {
+        response.status(406).json({error: "Inormation is not sufficient"})
+    }
    
 })
 app.listen(3001,(request, response)=>{

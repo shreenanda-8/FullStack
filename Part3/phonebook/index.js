@@ -2,38 +2,38 @@ const express = require('express')
 
 const app = express()
 app.use(express.json())
-const getRandom = ()=>{
+const getRandom = () => {
     return Math.floor((Math.random() * 100000000000) + 121);
 }
 const data = [
-    { 
-      "id": 1,
-      "name": "Arto Hellas", 
-      "number": "040-123456"
+    {
+        "id": 1,
+        "name": "Arto Hellas",
+        "number": "040-123456"
     },
-    { 
-      "id": 2,
-      "name": "Ada Lovelace", 
-      "number": "39-44-5323523"
+    {
+        "id": 2,
+        "name": "Ada Lovelace",
+        "number": "39-44-5323523"
     },
-    { 
-      "id": 3,
-      "name": "Dan Abramov", 
-      "number": "12-43-234345"
+    {
+        "id": 3,
+        "name": "Dan Abramov",
+        "number": "12-43-234345"
     },
-    { 
-      "id": 4,
-      "name": "Mary Poppendieck", 
-      "number": "39-23-6423122"
+    {
+        "id": 4,
+        "name": "Mary Poppendieck",
+        "number": "39-23-6423122"
     }
 ]
-app.get('/api/persons', (request, response)=>{
- response.send(JSON.stringify(data))
+app.get('/api/persons', (request, response) => {
+    response.send(JSON.stringify(data))
 })
-app.get('/info', (request, response)=>{
-    
+app.get('/info', (request, response) => {
+
     response.send(
-       `<div>
+        `<div>
        <p>Phonebook has info for ${data.length} people</p>
        ${new Date()}
        </div>
@@ -41,60 +41,55 @@ app.get('/info', (request, response)=>{
        `
     )
 })
-app.get('/api/persons/:id',(request, response)=>{
-   
+app.get('/api/persons/:id', (request, response) => {
+
     const ID = Number(request.params.id)
-    const info = data.filter((info)=>info.id === ID)
+    const info = data.filter((info) => info.id === ID)
     console.log(info)
-    if(info.length)
-    {
+    if (info.length) {
 
         response.json(info)
     }
-    else
-    {
+    else {
         response.status(404).send("Reqeusting user not found")
     }
-    
+
 })
-app.delete('/api/persons/:id', (request, response)=>{
+app.delete('/api/persons/:id', (request, response) => {
     console.log("Deleted")
-    const list = data.filter((info)=>{
+    const list = data.filter((info) => {
         return info.id !== Number(request.params.id)
     })
     data = list
     response.status(204).end()
 })
-app.post('/api/persons', (request, response)=>{
+app.post('/api/persons', (request, response) => {
     const info = {
         name: `${request.body.name}`,
-        number:`${request.body.number}`,
+        number: `${request.body.number}`,
         id: getRandom()
     }
-    if(info.name.length && info.number.length)
-    {
-        const value = data.filter((item)=>{
+    if (info.name.length && info.number.length) {
+        const value = data.filter((item) => {
             console.log(item)
             return item.name == info.name
         })
         console.log(value)
         console.log(info.name)
-       if(value.length)
-       {
-            response.status(406).json({error: "Name must be unique"})
-        
-       }
-       else{
-        data.push(info)
-        response.status(202).json(data)
-       }
+        if (value.length) {
+            response.status(406).json({ error: "Name must be unique" })
+
+        }
+        else {
+            data.push(info)
+            response.status(202).json(data)
+        }
     }
-    else
-    {
-        response.status(406).json({error: "Inormation is not sufficient"})
+    else {
+        response.status(406).json({ error: "Inormation is not sufficient" })
     }
-   
+
 })
-app.listen(3001,(request, response)=>{
+app.listen(3001, (request, response) => {
     console.log("Server started running")
 })

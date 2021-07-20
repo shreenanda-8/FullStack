@@ -137,6 +137,14 @@ const App = () => {
                 phoneServise.update(info[0])
                     .then((response) => {
                         setPersons(list)
+                         setError(`Changed the number of ${newName}`)
+                    setColor("green")
+                    setTimeout(() => {
+                        setError(null)
+                    }, 3000)
+                    })
+                    .catch((err)=>{
+                        console.log({error: err.message})
                     })
             }
         }

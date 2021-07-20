@@ -2,6 +2,9 @@ const express = require('express')
 
 const app = express()
 app.use(express.json())
+const getRandom = ()=>{
+    return Math.floor((Math.random() * 100000000000) + 121);
+}
 const data = [
     { 
       "id": 1,
@@ -54,7 +57,24 @@ app.get('/api/persons/:id',(request, response)=>{
     }
     
 })
-
+app.delete('/api/persons/:id', (request, response)=>{
+    console.log("Deleted")
+    const list = data.filter((info)=>{
+        return info.id !== Number(request.params.id)
+    })
+    data = list
+    response.status(204).end()
+})
+app.post('/api/persons', (request, response)=>{
+    const info = {
+        name: request.body.name,
+        number: request.body.number,
+        id: getRandom()
+    }
+    data.push(info)
+    response.status(202).json(data)
+   
+})
 app.listen(3001,(request, response)=>{
     console.log("Server started running")
 })

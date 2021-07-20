@@ -27,6 +27,17 @@ const data = [
 app.get('/api/persons', (request, response)=>{
  response.send(JSON.stringify(data))
 })
+app.get('/info', (request, response)=>{
+    
+    response.send(
+       `<div>
+       <p>Phonebook has info for ${data.length} people</p>
+       ${new Date()}
+       </div>
+       
+       `
+    )
+})
 
 app.listen(3001,(request, response)=>{
     console.log("Server started running")

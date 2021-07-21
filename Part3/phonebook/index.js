@@ -1,7 +1,24 @@
 const express = require('express')
 
 const app = express()
+var morgan = require('morgan')
+
 app.use(express.json())
+morgan.token('post',  (req)=>{
+	if(req.method === 'POST')
+    {
+        return JSON.stringify(req.body)
+    }
+	else
+    {
+
+		return null
+    }
+})
+
+morgan.format('data',':method :url :status :res[content-length] - :response-time ms :post')
+
+app.use(morgan('data'))
 const getRandom = () => {
     return Math.floor((Math.random() * 100000000000) + 121);
 }
@@ -71,17 +88,18 @@ app.post('/api/persons', (request, response) => {
     }
     if (info.name.length && info.number.length) {
         const value = data.filter((item) => {
-            console.log(item)
+            
             return item.name == info.name
         })
-        console.log(value)
-        console.log(info.name)
+       
+       
         if (value.length) {
             response.status(406).json({ error: "Name must be unique" })
 
         }
         else {
             data.push(info)
+           
             response.status(202).json(data)
         }
     }

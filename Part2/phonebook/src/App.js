@@ -115,6 +115,7 @@ const App = () => {
         event.preventDefault()
         setNewNumber(event.target.value)
     }
+  
     const handleSubmit = (event) => {
 
         event.preventDefault()
@@ -149,7 +150,7 @@ const App = () => {
             }
         }
         else {
-            const data = { name: newName, number: newNumber }
+            const data = { name: newName, number: newNumber}
             phoneServise.create(data)
                 .then((response) => {
                     listVisible.push(true)

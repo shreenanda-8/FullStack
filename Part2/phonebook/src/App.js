@@ -55,7 +55,7 @@ const Notification = ({ text, color }) => {
         color: `${color}`,
 
         background: "lightgrey",
-        fontSize: "20px",
+        fontSize: "10px",
         borderStyle: "solid",
         borderRadius: "5px",
         padding: "10px",
@@ -145,7 +145,11 @@ const App = () => {
                     }, 3000)
                     })
                     .catch((err)=>{
-                        console.log({error: err.message})
+                        setError(`${err.response.data.error}`)
+                    setColor("red")
+                    setTimeout(() => {
+                        setError(null)
+                    }, 3000)
                     })
             }
         }
@@ -165,7 +169,11 @@ const App = () => {
                     }, 3000)
                 })
                 .catch((err) => {
-                    console.log({ error: err.message })
+                    setError(`${err.response.data.error}`)
+                    setColor("red")
+                    setTimeout(() => {
+                        setError(null)
+                    }, 3000)
                 })
 
 

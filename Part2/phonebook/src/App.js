@@ -61,18 +61,17 @@ const Notification = ({ text, color }) => {
         padding: "10px",
         marginBottom: "10px"
     }
-   if(text)
-   {
-    return (
-        <div style={notif}>
-            <h1>{text}</h1>
-        </div>
-    )
+    if (text) {
+        return (
+            <div style={notif}>
+                <h1>{text}</h1>
+            </div>
+        )
 
-   }
-   else{
-       return(<></>)
-   }
+    }
+    else {
+        return (<></>)
+    }
 
 }
 const App = () => {
@@ -84,26 +83,27 @@ const App = () => {
     const [newName, setNewName] = useState('')
     const [searchField, setSearch] = useState('')
     useEffect(() => {
-        function DoTheJob() {
-            const disp = visible
-            phoneServise.getAll()
-                .then((Info) => {
+
+        const disp = []
+
+        phoneServise.getAll()
+            .then((Info) => {
 
 
-                    for (var i = 0; i < Info.data.length; i++) {
-                        disp.push(true)
-                    }
-                    setVisible(disp)
-                    setPersons(Info.data)
-                })
-                .catch((err) => {
-                    console.log({ error: err.message })
-                })
+                for (var i = 0; i < Info.data.length; i++) {
+                    disp.push(true)
+                }
+                setVisible(disp)
+                setPersons(Info.data)
+            })
+            .catch((err) => {
+                console.log({ error: err.message })
+            })
 
-        }
-        DoTheJob()
 
-    }, [visible])
+
+
+    }, [])
     const handleName = (event) => {
 
         //I got an error about uncontrolled input and controlled input unitil I updated the state
@@ -115,7 +115,7 @@ const App = () => {
         event.preventDefault()
         setNewNumber(event.target.value)
     }
-  
+
     const handleSubmit = (event) => {
 
         event.preventDefault()
@@ -126,6 +126,9 @@ const App = () => {
 
         if (listNames.includes(newName)) {
             if (window.confirm(`${newName} is already added to phonebook, replace old number with new one?`)) {
+
+
+
                 const list = persons.map((info) => {
                     if (info.name === newName) {
                         info.number = newNumber
@@ -133,28 +136,47 @@ const App = () => {
                     return info
                 })
                 const info = persons.filter((info) => info.name === newName)
-
                 info[0].number = newNumber
+
                 phoneServise.update(info[0])
                     .then((response) => {
+
                         setPersons(list)
-                         setError(`Changed the number of ${newName}`)
-                    setColor("green")
-                    setTimeout(() => {
-                        setError(null)
-                    }, 3000)
+                        setError(`Changed the number of ${newName}`)
+                        setColor("green")
+                        setTimeout(() => {
+                            setError(null)
+                        }, 3000)
+
                     })
-                    .catch((err)=>{
+                    .catch((err) => {
+                        const data = persons
+                        for (let i = 0; i < persons.length; i++) {
+
+                            if (data[i].name === newName) {
+
+                                const data = visible.filter((info, ind) => ind !== i)
+                                const list = persons.filter((info) => info.name !== newName)
+                                setPersons(list)
+                                setVisible(data)
+                            }
+                        }
+
+
+                        //The method to get the exact same error message from the backend:}
                         setError(`${err.response.data.error}`)
-                    setColor("red")
-                    setTimeout(() => {
-                        setError(null)
-                    }, 3000)
+                        setColor("red")
+                        setTimeout(() => {
+                            setError(null)
+                        }, 3000)
+
                     })
+
+
             }
         }
         else {
-            const data = { name: newName, number: newNumber}
+            const data = { name: newName, number: newNumber }
             phoneServise.create(data)
                 .then((response) => {
                     listVisible.push(true)
@@ -169,6 +191,7 @@ const App = () => {
                     }, 3000)
                 })
                 .catch((err) => {
+
                     setError(`${err.response.data.error}`)
                     setColor("red")
                     setTimeout(() => {
@@ -212,25 +235,23 @@ const App = () => {
         const list = persons
         const visibility = visible
 
-        const index = list.map((info) => info.id === Info.id)
+        const index = list.map((info) => info.id)
         if (window.confirm(`Delete ${Info.name} ?`)) {
             phoneServise.remove(Info.id)
                 .then((response) => {
 
 
-                    for (let i = 0; i < index.length; i++) {
-                        if (index[i]) {
 
-                            const updated = visibility.filter((info, ind) => ind !== i)
-                            setVisible(updated)
-                            break
-                        }
-                    }
+                    setVisible(visibility.filter((info, ind) => ind !== index))
                     setPersons(list.filter((info) => info.id !== Info.id))
+
                 })
                 .catch((err) => {
                     console.log({ error: err.message })
-                    setError(`Information of ${Info.name} is already removed from the server. Refresh to see the changes`)
+
+                    setError(`${err.response.data.error}`)
+                    setPersons(persons)
+                    setVisible(visible)
                     setColor('red')
                     setTimeout(() => {
                         setError(null)

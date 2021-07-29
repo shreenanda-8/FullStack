@@ -3,23 +3,24 @@ const supertest = require('supertest')
 const app = require('../app.js')
 const api = supertest(app)
 const Blog = require('../models/blog.js')
+
 const initialBlogs = [
 	{
-		title: "React patterns",
-		author: "Michael Chan",
-		url: "https://reactpatterns.com/",
+		title: 'React patterns',
+		author: 'Michael Chan',
+		url: 'https://reactpatterns.com/',
 		likes: 7
 	},
 	{
-		title: "Go To Statement Considered Harmful",
-		author: "Edsger W. Dijkstra",
-		url: "http://www.u.arizona.edu/~rubinson/copyright_violations/Go_To_Considered_Harmful.html",
+		title: 'Go To Statement Considered Harmful',
+		author: 'Edsger W. Dijkstra',
+		url: 'http://www.u.arizona.edu/~rubinson/copyright_violations/Go_To_Considered_Harmful.html',
 		likes: 5
 	},
 	{
-		title: "Canonical string reduction",
-		author: "Edsger W. Dijkstra",
-		url: "http://www.cs.utexas.edu/~EWD/transcriptions/EWD08xx/EWD808.html",
+		title: 'Canonical string reduction',
+		author: 'Edsger W. Dijkstra',
+		url: 'http://www.cs.utexas.edu/~EWD/transcriptions/EWD08xx/EWD808.html',
 		likes: 12
 	}
 ]
@@ -42,8 +43,8 @@ test('verify GET request to /api/blogs', async() => {
 
 test('verify the proper key nomenclature in database', async() => {
     const response = await api.get('/api/blogs')
-                    .expect(200)
-                    .expect('Content-Type', /application\/json/)
+                              .expect(200)
+                              .expect('Content-Type', /application\/json/)
     for(let info of response.body) {
         expect(info.id).toBeDefined()
     }
@@ -98,6 +99,7 @@ test('verify the missing properites (title, url)', async() => {
              
 
 })
+
 afterAll(() => {
     mongoose.connection.close()
 })

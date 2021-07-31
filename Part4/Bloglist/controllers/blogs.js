@@ -2,7 +2,7 @@ const Blog= require('../models/blog.js')
 const blogServer = require('express').Router()
 blogServer.get('/', async(request, response) => {
     const data = await Blog.find({})
-    response.status(200).json(data)    
+    response.status(200).json(data)
 })
 
 
@@ -11,7 +11,7 @@ blogServer.post('/', async(request, response) => {
     if(request.body.likes === undefined)
     {
         blog.likes = 0
-    }  
+    }
     if(request.body.title === undefined || request.body.url === undefined)
     {
         response.status(400).end()
@@ -20,11 +20,11 @@ blogServer.post('/', async(request, response) => {
     {
         const savedData = await blog.save()
         response.status(201).json(savedData)
-       
+
     }
-   
+
 })
-blogServer.delete('/:id', async(request, response) =>{
+blogServer.delete('/:id', async(request, response) => {
     const ID = request.params.id
     const res = await Blog.findByIdAndDelete(ID)
     if(res)
@@ -33,9 +33,9 @@ blogServer.delete('/:id', async(request, response) =>{
     }
     else
     {
-        response.status(404).send("Missing id")
+        response.status(404).send('Missing id')
     }
-   
+
 })
 blogServer.put('/:id', async(request, response) => {
     const ID = request.params.id
@@ -47,7 +47,7 @@ blogServer.put('/:id', async(request, response) => {
         likes: request.body.likes + 1
     }
     console.log(data)
-    await Blog.findByIdAndUpdate(ID,data,{new : true},(err,res) => {
+    await Blog.findByIdAndUpdate(ID,data,{ new : true },(err,res) => {
         if(err)
         {
             response.status(500).send('Internal server error')
@@ -57,7 +57,7 @@ blogServer.put('/:id', async(request, response) => {
             console.log(res)
             response.status(204).json(res)
         }
-        
+
     })
 })
 module.exports = blogServer

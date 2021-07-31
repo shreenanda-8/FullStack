@@ -1,8 +1,19 @@
 module.exports = {
+    overrides: [
+        Object.assign(
+            {
+                files: [ '**/*.test.js' ],
+                env: { jest: true },
+                plugins: [ 'jest' ],
+            },
+            require('eslint-plugin-jest').configs.recommended
+        )
+    ],
     'env': {
         'commonjs': true,
         'es2021': true,
-        'node': true
+        'node': true,
+        'jest/globals': true
     },
     'extends': 'eslint:recommended',
     'parserOptions': {

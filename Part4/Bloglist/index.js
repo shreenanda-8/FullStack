@@ -1,6 +1,4 @@
-const http = require('http') 
-
-
+const http = require('http')
 const dotenv = require('dotenv')
 const logger = require('./utils/logger.js')
 const app = require('./app.js')

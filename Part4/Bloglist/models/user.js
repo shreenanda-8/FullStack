@@ -7,11 +7,12 @@ const userSchema = mongoose.Schema({
         type: String,
         unique: true,
         required: true,
-        minlength: 5
+        minlength: 3
     },
     password: {
         type: String,
-        required: true
+        required: true,
+        minlenth: 3
     },
     name: String
 
@@ -22,6 +23,7 @@ userSchema.set('toJSON', {
         returnedObject.id = returnedObject._id.toString()
         delete returnedObject._id
         delete returnedObject.__v
-    } 
+        delete returnedObject.password
+    }
 })
 module.exports = mongoose.model('User', userSchema)

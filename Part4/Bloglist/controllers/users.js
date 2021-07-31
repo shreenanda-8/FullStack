@@ -7,17 +7,21 @@ userServer.post('/', async(request, response) => {
     //Validation of password should be done in collections it's hashed in db
     if(request.body.password.length<3)
     {
-        return response.status(400).send({ error: 'Password must be atleast 3 characters long' })
+        response.status(400).send({ error: 'Password must be atleast 3 characters long' })
     }
-    const passwordHash = await bcrypt.hash(request.body.password, saltRounds)
-    const user = new User({
-        name: request.body.name,
-        username: request.body.username,
-        password: passwordHash
-    })
-    const savedData = await user.save()
+    else
+    {
+        const passwordHash = await bcrypt.hash(request.body.password, saltRounds)
+        const user = new User({
+            name: request.body.name,
+            username: request.body.username,
+            password: passwordHash
+        })
+        const savedData = await user.save()
 
-    response.status(201).json(savedData)
+        response.status(201).json(savedData)
+    }
+
 
 })
 userServer.get('/', async(request, response) => {

@@ -25,7 +25,7 @@ userServer.post('/', async(request, response) => {
 
 })
 userServer.get('/', async(request, response) => {
-    const returnedData = await User.find({})
+    const returnedData = await User.find({}).populate('blogs',  { username: 1, author: 1, id: 1, title: 1, url: 1 })
 
     response.status(200).json(returnedData)
 })

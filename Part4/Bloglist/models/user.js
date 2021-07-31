@@ -1,6 +1,7 @@
 const mongoose = require('mongoose')
-const config = require('../utils/config.js')
-mongoose.connect(config.MONGODB_URI, { useNewUrlParser: true, useUnifiedTopology: true })
+//const Blog = require('./blog.js')
+
+
 const uniqueValidator = require('mongoose-unique-validator')
 const userSchema = mongoose.Schema({
     username: {
@@ -12,9 +13,15 @@ const userSchema = mongoose.Schema({
     password: {
         type: String,
         required: true,
-        minlenth: 3
+
     },
-    name: String
+    name: String,
+    blogs: [
+        {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'Blog'
+        }
+    ]
 
 })
 userSchema.plugin(uniqueValidator)

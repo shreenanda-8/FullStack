@@ -3,11 +3,38 @@ POST http://localhost:3003/api/blogs/
 Content-Type: application/json
 
 {
-    "title": "Hamari adhoori kahani2",
+    "title": "testing 3",
     "author": "Benjamin franklin",
     "url": "www.google.com",
-    "likes": 20
+    "likes": 20,
+    "userId": "61053384cab8c03ac4f0bbf1"
 
 }
 ###
 GET http://localhost:3003/api/blogs/
+###
+DELETE http://localhost:3003/api/blogs/6100abf7d1e93125c8103d48
+###
+PUT http://localhost:3003/api/blogs/60fbd5d8f38a733be8ef7e3c
+Content-Type: application/json
+
+ {
+    "title": "DSA",
+    "author": "Benjam",
+    "url": "www.google.com",
+    "likes": 20,
+    "id": "61011508c446c41e78127431"
+  }
+
+###
+POST http://localhost:3003/api/users/
+Content-Type: application/json
+
+{
+    "username": "Shivane shamboling",
+    "name" : "Floyd2",
+    "password": "bs"
+}
+
+###
+GET http://localhost:3003/api/users/

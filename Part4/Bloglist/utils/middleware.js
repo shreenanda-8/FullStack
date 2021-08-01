@@ -17,8 +17,12 @@ const errorHandler = (error, request, response, next) => {
     if (error.name === 'CastError') {
         return response.status(400).send({ error: 'malformatted id' })
     }
-    if(error.name === 'ValidationError'){
+   if(error.name === 'ValidationError'){
         return response.status(400).send({ error: 'username must be atleast 3 characters long' })
+    }else if (error.name === 'JsonWebTokenError') {
+        return response.status(401).json({
+          error: 'invalid token'
+        })
     }
     next(error)
 }

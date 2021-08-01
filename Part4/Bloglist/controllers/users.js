@@ -1,7 +1,7 @@
-const userServer = require('express').Router()
+const userRouter = require('express').Router()
 const User = require('../models/user.js')
 const bcrypt = require('bcrypt')
-userServer.post('/', async(request, response) => {
+userRouter.post('/', async(request, response) => {
     const saltRounds = 10
 
     //Validation of password should be done in collections it's hashed in db
@@ -24,9 +24,9 @@ userServer.post('/', async(request, response) => {
 
 
 })
-userServer.get('/', async(request, response) => {
+userRouter.get('/', async(request, response) => {
     const returnedData = await User.find({}).populate('blogs',  { username: 1, author: 1, id: 1, title: 1, url: 1 })
 
     response.status(200).json(returnedData)
 })
-module.exports = userServer
+module.exports = userRouter

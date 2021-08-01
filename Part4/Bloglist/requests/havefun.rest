@@ -31,10 +31,19 @@ POST http://localhost:3003/api/users/
 Content-Type: application/json
 
 {
-    "username": "Shivane shamboling",
-    "name" : "Floyd2",
-    "password": "bs"
+    "username": "TokenTester",
+    "name" : "RobertWolf",
+    "password": "randompassword"
 }
 
 ###
 GET http://localhost:3003/api/users/
+
+###
+POST http://localhost:3003/api/login/
+Content-Type: application/json
+
+{
+    "username": "TokenTester",
+    "password": "randompassword"
+}

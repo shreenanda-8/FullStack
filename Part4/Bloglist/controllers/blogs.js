@@ -1,13 +1,13 @@
 const Blog= require('../models/blog.js')
-const blogServer = require('express').Router()
+const blogRouter = require('express').Router()
 const User = require('../models/user.js')
-blogServer.get('/', async(request, response) => {
+blogRouter.get('/', async(request, response) => {
     const data = await Blog.find({}).populate('user', { username: 1, name: 1, id: 1 })
     response.status(200).json(data)
 })
 
 
-blogServer.post('/', async(request, response) => {
+blogRouter.post('/', async(request, response) => {
 
     const user = await User.findById(request.body.userId)
 
@@ -37,7 +37,7 @@ blogServer.post('/', async(request, response) => {
     }
 
 })
-blogServer.delete('/:id', async(request, response) => {
+blogRouter.delete('/:id', async(request, response) => {
     const ID = request.params.id
     const res = await Blog.findByIdAndDelete(ID)
     if(res)
@@ -50,7 +50,7 @@ blogServer.delete('/:id', async(request, response) => {
     }
 
 })
-blogServer.put('/:id', async(request, response) => {
+blogRouter.put('/:id', async(request, response) => {
     const ID = request.params.id
     console.log(ID)
     const data = {
@@ -73,4 +73,4 @@ blogServer.put('/:id', async(request, response) => {
 
     })
 })
-module.exports = blogServer
+module.exports = blogRouter

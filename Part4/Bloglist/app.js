@@ -7,8 +7,9 @@ const dotenv = require('dotenv')
 const config = require('./utils/config.js')
 const logger = require('./utils/logger.js')
 const middleware = require('./utils/middleware.js')
-const blogServer = require('./controllers/blogs.js')
-const userServer = require('./controllers/users.js')
+const blogRouter = require('./controllers/blogs.js')
+const userRouter = require('./controllers/users.js')
+const loginRouter = require('./controllers/login.js')
 dotenv.config()
 
 app.use(cors())
@@ -21,9 +22,9 @@ mongoose.connect(config.MONGODB_URI, { useNewUrlParser: true, useUnifiedTopology
     .catch((err) => {
         logger.error({ error: err.message })
     })
-app.use('/api/users', userServer)
-app.use('/api/blogs', blogServer)
-
+app.use('/api/users', userRouter)
+app.use('/api/blogs', blogRouter)
+app.use('/api/login', loginRouter)
 
 app.use(middleware.unknownEndpoint)
 app.use(middleware.errorHandler)

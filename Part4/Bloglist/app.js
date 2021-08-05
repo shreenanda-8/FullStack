@@ -25,6 +25,7 @@ mongoose.connect(config.MONGODB_URI, { useNewUrlParser: true, useUnifiedTopology
     })
 app.use('/api/users', userRouter)
 app.use(middleware.tokenExtractor)
+
 app.use('/api/blogs', blogRouter)
 app.use('/api/login', loginRouter)
 
